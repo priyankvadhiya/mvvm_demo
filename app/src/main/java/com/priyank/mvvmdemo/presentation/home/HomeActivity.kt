@@ -2,17 +2,17 @@ package com.priyank.mvvmdemo.presentation.home
 
 import android.os.Bundle
 import androidx.lifecycle.Observer
-import com.priyank.mvvmdemo.R
+import com.priyank.mvvmdemo.databinding.ActivityHomeBinding
 import com.priyank.mvvmdemo.presentation.base.BaseActivity
 import com.priyank.mvvmdemo.presentation.home.adapter.HomeUserLIstAdapter
 import com.priyank.mvvmdemo.presentation.home.model.UserListMainModel
 import com.priyank.mvvmdemo.utility.isNetworkAvailable
 import com.priyank.mvvmdemo.utility.toast
-import kotlinx.android.synthetic.main.activity_home.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeActivity : BaseActivity() {
 
+    private lateinit var binding: ActivityHomeBinding
     private val homeViewModel: HomeViewModel by viewModel()
 
     override fun getBaseViewModel() = homeViewModel
@@ -21,7 +21,8 @@ class HomeActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
+        binding = ActivityHomeBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         init()
     }
@@ -41,7 +42,7 @@ class HomeActivity : BaseActivity() {
 
     private fun setUpAdapter(userListMainModel: List<UserListMainModel.Data>) {
         userAdapter = HomeUserLIstAdapter(userListMainModel, this)
-        recyclerList.apply {
+        binding.recyclerList.apply {
             hasFixedSize()
             adapter = userAdapter
         }

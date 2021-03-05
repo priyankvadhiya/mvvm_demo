@@ -1,15 +1,14 @@
 package com.priyank.mvvmdemo.presentation.home.adapter
 
 import android.content.Context
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.priyank.mvvmdemo.R
+import com.priyank.mvvmdemo.databinding.ItemUserBinding
 import com.priyank.mvvmdemo.presentation.home.model.UserListMainModel
-import kotlinx.android.synthetic.main.item_user.view.*
 
 class HomeUserLIstAdapter(
     private val list: List<UserListMainModel.Data>,
@@ -19,9 +18,11 @@ class HomeUserLIstAdapter(
 
     private val options = RequestOptions.centerCropTransform()
 
+    private lateinit var binding: ItemUserBinding
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val rowView = LayoutInflater.from(parent.context).inflate(R.layout.item_user, parent, false)
-        return MyViewHolder(rowView)
+        binding = ItemUserBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return MyViewHolder(binding.root)
     }
 
     override fun getItemCount(): Int {
@@ -32,10 +33,10 @@ class HomeUserLIstAdapter(
 
         with(list[position]) {
             //Do you Write
-            Glide.with(context).load(this.avatar).apply(options).into(holder.itemView.ivImage)
+            Glide.with(context).load(this.avatar).apply(options).into(binding.ivImage)
 
-            holder.itemView.tvTitle.text = this.first_name.plus(" ").plus(this.last_name)
-            holder.itemView.tvEmail.text = this.email
+            binding.tvTitle.text = this.first_name.plus(" ").plus(this.last_name)
+            binding.tvEmail.text = this.email
         }
     }
 

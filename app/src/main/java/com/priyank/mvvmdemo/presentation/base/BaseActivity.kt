@@ -6,6 +6,7 @@ import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import com.google.android.material.snackbar.Snackbar
 import com.google.gson.JsonSyntaxException
 import com.priyank.mvvmdemo.R
 import com.priyank.mvvmdemo.utility.showDialog
@@ -46,18 +47,18 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope {
                 when (this) {
                     is HttpException -> {
                         when (this.code()) {
-                            HttpsURLConnection.HTTP_UNAUTHORIZED -> showErrorDialog(getString(R.string.exception_error_unauthorized))
-                            HttpsURLConnection.HTTP_FORBIDDEN -> showErrorDialog(getString(R.string.exception_error_forbidden))
-                            HttpsURLConnection.HTTP_INTERNAL_ERROR -> showErrorDialog(getString(R.string.exception_error_server))
-                            HttpsURLConnection.HTTP_BAD_REQUEST -> showErrorDialog(getString(R.string.exception_error_bad_request))
+                            HttpsURLConnection.HTTP_UNAUTHORIZED -> showMessage(getString(R.string.exception_error_unauthorized))
+                            HttpsURLConnection.HTTP_FORBIDDEN -> showMessage(getString(R.string.exception_error_forbidden))
+                            HttpsURLConnection.HTTP_INTERNAL_ERROR -> showMessage(getString(R.string.exception_error_server))
+                            HttpsURLConnection.HTTP_BAD_REQUEST -> showMessage(getString(R.string.exception_error_bad_request))
                             else -> this.localizedMessage
                         }
                     }
                     is JsonSyntaxException -> {
-                        showErrorDialog(getString(R.string.exception_error_unparceble))
+                        showMessage(getString(R.string.exception_error_unparceble))
                     }
                     else -> {
-                        showErrorDialog(this.message!!)
+                        showMessage(this.message!!)
                     }
                 }
             }
@@ -66,12 +67,15 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope {
 
     private fun showErrorDialog(message: String) {
         showDialog(
-            getString(R.string.app_name),
             message,
-            getString(android.R.string.ok), DialogInterface.OnClickListener { dialog, which ->
+            getString(android.R.string.ok), { dialog, _ ->
                 dialog.dismiss()
             }
         )
+    }
+
+    fun showMessage(message: String) {
+        Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
     }
 
     override fun onDestroy() {
